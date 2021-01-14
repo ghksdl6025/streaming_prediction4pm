@@ -19,6 +19,7 @@ key_pair = {
 }
 
 case_dict ={}
+trainset_prefix ={}
 for x,y in dataset:
     # Event stream change dictionary keys
     x = utils.dictkey_chg(x, key_pair)
@@ -29,25 +30,27 @@ for x,y in dataset:
     # Check label possible
     x = utils.set_label(x)
 
+    # Initialize case by prefix length
+    caseid = x['caseid']
+    x.pop('caseid')
+    case_bin = prefix_bin(caseid, x)
+
     # Allocate event stream to prefix bin class
     if 'True label' not in x.keys():
-        caseid = x['caseid']
-        x.pop('caseid')
-        case_bin = prefix_bin()
-        case_bin.set_caseid(caseid)
-
         if caseid not in list(case_dict.keys()):
-            case_bin.set_start_ts(x['ts'])
-            case_dict[caseid] = [case_bin]
+            case_bin.set_prefix_length(1)    
+            case_dict[caseid] = []
         else:
-            start_ts = case_dict[caseid][0].start_ts
-            case_bin.set_start_ts(start_ts)
-            case_dict[caseid].append(case_bin)
+            case_bin.set_prefix_length(len(case_dict[caseid])+1)
+            case_bin.set_prev_enc(case_dict[caseid][-1])
+        case_bin.update_encoded()
+        case_dict[caseid].append(case_bin)
             
-    # else:
-
-print(case_dict['Offer_1064426652'][0].start_ts,case_dict['Offer_1064426652'][1].start_ts,case_dict['Offer_1064426652'][3].start_ts)
-        
+    else:
+        print('----------')
+        for prefix in range(1,len(case_dict[caseid])):
+            casebyprefix = case_dict[caseid][prefix]
+            print(casebyprefix.prefix_length, casebyprefix.encoded)
 
     
         

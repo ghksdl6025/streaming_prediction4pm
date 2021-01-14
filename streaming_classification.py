@@ -1,15 +1,16 @@
 from river import datasets, stream
 from river import linear_model
 from river import metrics, compose, preprocessing
+from river import optim,evaluate
+from river import tree
 
-metric = metrics.ROCAUC()
-roclist =[]
-for x, y in dataset:
-    # y_pred = model.predict_proba_one(x)
-    model.learn_one(x,y)
-    y_pred = model.predict_one(x)
-    metric.update(y, y_pred)
-    print(metric.get())
-    roclist.append(metric.get())
-plt.plot(roclist)
-plt.show()
+X_y = datasets.Bikes()
+
+model = compose.Select('clouds', 'humidity', 'pressure', 'temperature', 'wind')
+model |= preprocessing.StandardScaler()
+model |= tree.BaseHoeffdingTree()
+
+metric = metrics.MAE()
+
+evaluate.progressive_val_score(X_y, model, metric, print_every=20_000)
+

@@ -20,6 +20,7 @@ key_pair = {
 
 case_dict ={}
 trainset_prefix ={}
+count = 0
 for x,y in dataset:
     # Event stream change dictionary keys
     x = utils.dictkey_chg(x, key_pair)
@@ -47,10 +48,19 @@ for x,y in dataset:
         case_dict[caseid].append(case_bin)
             
     else:
-        print('----------')
-        for prefix in range(1,len(case_dict[caseid])):
-            casebyprefix = case_dict[caseid][prefix]
-            print(casebyprefix.prefix_length, casebyprefix.encoded)
+        # Adding newly finished case to training set.
 
-    
-        
+        count +=1
+        if count >200:
+            break
+        else:
+            print('----------')
+            case_length = len(case_dict[caseid])+1
+            
+            for prefix in range(1, case_length-1):
+                if 'prefix_%s'%(prefix+1) not in list(trainset_prefix.keys()):
+                    trainset_prefix['prefix_%s'%(prefix+1)]=[]
+                case_dict[caseid][prefix].update_truelabel(x['True label'])
+                trainset_prefix['prefix_%s'%(prefix+1)].append(case_dict[caseid][prefix])
+print(trainset_prefix.keys())
+print(trainset_prefix['prefix_2'][0].__dict__)

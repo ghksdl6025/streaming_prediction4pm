@@ -99,7 +99,7 @@ def succ_aggr_enc(event,catattrs,prefix_length,prev_enc=None):
         
     return ohedict
 
-def invoke_cases_by_prefix(case_dict, prefix):
+def invoke_cases_by_prefix(case_dict):
     '''
     Invoke encoded cases by given prefix length and return 
 
@@ -121,7 +121,19 @@ def invoke_cases_by_prefix(case_dict, prefix):
             print(casebyprefix.prefix_length, casebyprefix.encoded)
 
 
+def readjustment_training(training):
+    '''
+    Readjustment on training set and extract feature matrix
 
+    Parameters
+    ----------
+    training: list
+        List of preprocessed 'bin' class
+
+    Return
+    ----------
+    Training 
+    '''
 
 if __name__== "__main__":
     test_event1 = {'activity': 'O_Accepted', 'resource': 'User_115', 'ts': '2016-01-29 21:33:14'}
@@ -129,9 +141,9 @@ if __name__== "__main__":
     test_event3 = {'activity': 'O_Accepted', 'resource': 'User_115', 'ts': '2016-01-29 21:04:32'}
 
     catattrs = ['activity','resource']
-    samp1 = succ_aggr_enc(test_event1,catattrs=catattrs)
-    samp2 = succ_aggr_enc(test_event2,catattrs=catattrs, prev_enc= samp1)
-    samp3 = succ_aggr_enc(test_event3,catattrs=catattrs, prev_enc= samp2)
+    samp1 = succ_aggr_enc(test_event1,catattrs=catattrs,prefix_length=1)
+    samp2 = succ_aggr_enc(test_event2,catattrs=catattrs,prefix_length=2,prev_enc= samp1)
+    samp3 = succ_aggr_enc(test_event3,catattrs=catattrs,prefix_length=3,prev_enc= samp2)
     # print(samp1)
     # print(samp2)
     print(samp3)

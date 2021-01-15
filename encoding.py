@@ -23,6 +23,7 @@ class prefix_bin:
         self.prev_enc = None
         self.encoded = {} # The encoded case and event attrs
         self.predicted ={} # Historical predicted values stored
+        self.true_label=''
 
         self.set_start_ts(event['ts'])
         
@@ -99,4 +100,10 @@ class prefix_bin:
             tuple with (Model id, prediction value)
         '''
         self.predicted[pred[0]] = pred[pred[1]]
+
+    def update_truelabel(self,label):
+        self.true_label = label
+
+
+
 

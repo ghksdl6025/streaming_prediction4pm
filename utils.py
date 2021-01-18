@@ -1,7 +1,22 @@
 '''
 Utility functions used in training and pre-processing stage.
 '''
+import graphviz 
 
+def save_graph_as_png(dot_string, output_file):
+    if type(dot_string) is str:
+        g = graphviz.Source(dot_string)
+    elif isinstance(dot_string, (graphviz.dot.Digraph, graphviz.dot.Graph)):
+        g = dot_string
+    if '/' in output_file:
+        dir_add = output_file.split('/')[1]
+        output_file = output_file.split('/')[2]
+    g.format = 'png'
+    g.filename = output_file
+    g.directory = './img/' +dir_add
+    g.render(view=False,cleanup=True)
+
+    return g
 
 def dictkey_chg(dictionary, key_pair):
     '''
@@ -120,10 +135,9 @@ def invoke_cases_by_prefix(case_dict):
             casebyprefix = case_dict[caseid][prefix]
             print(casebyprefix.prefix_length, casebyprefix.encoded)
 
-
-def readjustment_training(training):
+def readjustment_training(dataset, feature_matrix):
     '''
-    Readjustment on training set and extract feature matrix
+    Readjustment on encoded dataset and extract feature matrix
 
     Parameters
     ----------
@@ -134,6 +148,13 @@ def readjustment_training(training):
     ----------
     Training 
     '''
+    # print(dataset)
+    for feature in feature_matrix:
+        if feature not in list(dataset.keys()):
+            dataset[feature] = 0
+    return dataset
+
+
 
 if __name__== "__main__":
     test_event1 = {'activity': 'O_Accepted', 'resource': 'User_115', 'ts': '2016-01-29 21:33:14'}

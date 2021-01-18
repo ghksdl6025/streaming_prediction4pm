@@ -24,6 +24,7 @@ class prefix_bin:
         self.encoded = {} # The encoded case and event attrs
         self.predicted ={} # Historical predicted values stored
         self.true_label=''
+        self.grace_updated = False
 
         self.set_start_ts(event['ts'])
         
@@ -96,14 +97,15 @@ class prefix_bin:
 
         Parameters
         ----------
-        pred: tuple 
-            tuple with (Model id, prediction value)
+        pred: value 
         '''
-        self.predicted[pred[0]] = pred[pred[1]]
+        
+        self.predicted[pred[0]] = pred[1]
 
     def update_truelabel(self,label):
         self.true_label = label
 
-
+    def update_grace_status(self,boolean):
+        self.grace_updated = boolean
 
 

@@ -54,11 +54,11 @@ def set_label(data):
     '''
     y = ''
     if 'Cancelled' in data['activity']:
-        y = 'Cancelled'
+        y = 'Not accepted'
     elif 'Accepted' in data['activity']:
         y = 'Accepted'
     elif 'Refused' in data['activity']:
-        y = 'Refused'
+        y = 'Not accepted'
 
     if len(y) >=1:
         data['True label'] =y

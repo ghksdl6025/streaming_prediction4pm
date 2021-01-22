@@ -148,11 +148,13 @@ def readjustment_training(dataset, feature_matrix):
     ----------
     Training 
     '''
-    # print(dataset)
+    new_dataset ={}
     for feature in feature_matrix:
-        if feature not in list(dataset.keys()):
-            dataset[feature] = 0
-    return dataset
+        if feature in list(dataset.keys()):
+            new_dataset[feature] = dataset[feature]
+        else:
+            new_dataset[feature] = 0
+    return new_dataset
 
 
 

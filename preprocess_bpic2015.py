@@ -13,31 +13,27 @@ df['Complete Timestamp'] = pd.to_datetime(df['Complete Timestamp'])
 df = df.sort_values(by='Complete Timestamp')
 
 groups = df.groupby('Case ID')
-lastact =set()
+concatlist = []
 for _,group in groups:
+    group = group.reset_index(drop=True)
     actlist = list(group['Activity'])
     progresslist = []
+    outcomelist = []
     labelchecker = False
-    for act in actlist[:-1]:
-        if act == 'send confirmation receipt':
-            labelchecker =True
-        if labelchecker == True and act =='retrieve missing data':
-            progresslist.append('end')
-            break
-        progresslist.append('continue')
-    if labelchecker ==False:
-        progresslist.append('end')
-    if len(actlist) != len(progresslist):
-        print(actlist)
-        print(progresslist)
+    eventtag = 'continue'
+    outcome = None
+    for act in range(len(actlist)):
+        
+        if 'send confirmation receipt' in actlist[:act] and actlist[act] =='retrieve missing data':
+            outcome = True
+        progresslist.append(eventtag)
+        outcomelist.append(outcome)
+    progresslist[-1]='end'
+    # print(outcomelist)
+    group['Outcome'] = outcomelist
+    group['Progress'] = progresslist
+    concatlist.append(group)
 
-            
-            
-    progresslist.append('end')
-
-    
-
-
-            
-
-    
+dfn = pd.concat(concatlist)            
+print(dfn.head)
+dfn.to_csv('./data/bpic15_streaming.csv',index=False)

@@ -2,6 +2,7 @@ import pandas as pd
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.conversion.log import converter as log_converter
 
+pd.set_option('display.max_columns', 500)
 # log = xes_importer.apply('../../Downloads/BPIC15_1.xes')
 # dataframe = log_converter.apply(log, variant=log_converter.Variants.TO_DATA_FRAME)
 # dataframe.to_csv('./data/BPIC15_streaming2.csv',index=False)
@@ -21,7 +22,7 @@ for _,group in groups:
     outcomelist = []
     labelchecker = False
     eventtag = 'continue'
-    outcome = None
+    outcome = 'None'
     for act in range(len(actlist)):
         
         if 'send confirmation receipt' in actlist[:act] and actlist[act] =='retrieve missing data':
@@ -30,10 +31,12 @@ for _,group in groups:
         outcomelist.append(outcome)
     progresslist[-1]='end'
     # print(outcomelist)
+    if outcomelist[-1] =='None':
+        outcomelist[-1] =False
     group['Outcome'] = outcomelist
     group['Progress'] = progresslist
     concatlist.append(group)
 
-dfn = pd.concat(concatlist)            
+dfn = pd.concat(concatlist).sort_values(by='Complete Timestamp')
 print(dfn.head)
 dfn.to_csv('./data/bpic15_streaming.csv',index=False)

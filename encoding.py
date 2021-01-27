@@ -23,7 +23,7 @@ class prefix_bin:
         self.prev_enc = None
         self.encoded = {} # The encoded case and event attrs
         self.predicted ={} # Historical predicted values stored
-        self.true_label=''
+        self.true_label=None
         self.grace_updated = False
 
         self.set_start_ts(event['ts'])

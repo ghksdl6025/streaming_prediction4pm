@@ -90,7 +90,7 @@ for x,y in dataset:
         casecount +=1
 
         # Grace period to collect feature matrix
-        if casecount <100:
+        if casecount <200:
             case_length = len(case_dict[caseid])
             for prefix in range(1, case_length):
                 if 'prefix_%s'%(prefix+1) not in list(feature_matrix.keys()):
@@ -105,8 +105,8 @@ for x,y in dataset:
         else:
             # Modify encoded attributes of cases with feature matrix
             case_length = len(case_dict[caseid])
-            if case_length >10:
-                case_length =10
+            if case_length >8:
+                case_length =8
             y = outcome
             for prefix in range(1, case_length):
                 case_dict[caseid][prefix].update_truelabel(y)
@@ -131,12 +131,16 @@ for x,y in dataset:
                         case_dict[cases][prefix].update_prediction((training_models['prefix_%s'%(prefix+1)][2], y_pred))
             resultdict[caseid] = case_dict.pop(caseid)
 
-    if casecount > 200 and rowcounter%1000 == 0:
-        for prefix in training_models.keys():
-            model = training_models[prefix][0]
-            if prefix not in list(acc_dict.keys()):
-                acc_dict[prefix]=[training_models[prefix][1].get()]
-            else:
-                acc_dict[prefix].append(training_models[prefix][1].get())
-            outputfile = './bpic15/%s/%s.png'%(prefix, round(rowcounter*100/totallength,2))
-            utils.save_graph_as_png(model.draw(),outputfile)
+            for prefix in training_models.keys():
+                if prefix not in list(acc_dict.keys()):
+                    acc_dict[prefix]=[training_models[prefix][1].get()]
+                else:
+                    acc_dict[prefix].append(training_models[prefix][1].get())
+
+    # if casecount > 200 and rowcounter%1000 == 0:
+    #     for prefix in training_models.keys():
+    #         model = training_models[prefix][0]
+    #         outputfile = './bpic15/%s/%s.png'%(prefix, round(rowcounter*100/totallength,2))
+    #         utils.save_graph_as_png(model.draw(),outputfile)
+
+print(acc_dict)

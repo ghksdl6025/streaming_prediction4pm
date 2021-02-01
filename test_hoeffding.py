@@ -1,9 +1,10 @@
+#%%
 from river import stream,tree,metrics
 import utils
 import datetime
 from encoding import prefix_bin
 import csv
-
+#%%
 dataset = stream.iter_csv(
             './data/bpic15_streaming.csv',
             )
@@ -143,4 +144,14 @@ for x,y in dataset:
     #         outputfile = './bpic15/%s/%s.png'%(prefix, round(rowcounter*100/totallength,2))
     #         utils.save_graph_as_png(model.draw(),outputfile)
 
-print(acc_dict)
+#%%
+import matplotlib.pyplot as plt
+for t in list(acc_dict.keys())[:5]:
+    plt.plot(acc_dict[t], label=t)
+    
+# %%
+plt.legend()
+plt.show()
+
+
+# %%

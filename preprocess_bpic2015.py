@@ -3,10 +3,12 @@ from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.conversion.log import converter as log_converter
 
 pd.set_option('display.max_columns', 500)
-# log = xes_importer.apply('../../Downloads/BPIC15_1.xes')
-# dataframe = log_converter.apply(log, variant=log_converter.Variants.TO_DATA_FRAME)
-# dataframe.to_csv('./data/BPIC15_streaming2.csv',index=False)
+log = xes_importer.apply('../../Downloads/BPIC15_1.xes')
+dataframe = log_converter.apply(log, variant=log_converter.Variants.TO_DATA_FRAME)
+dataframe.to_csv('./data/BPIC15_streaming2.csv',index=False)
+print(dataframe.head)
 
+'''
 df = pd.read_csv('./data/BPIC15_1prep.csv')
 
 df = df.loc[:,['Case ID', 'Activity', 'Resource', 'Complete Timestamp']]
@@ -40,3 +42,4 @@ for _,group in groups:
 dfn = pd.concat(concatlist).sort_values(by='Complete Timestamp')
 print(dfn.head)
 dfn.to_csv('./data/bpic15_streaming.csv',index=False)
+'''

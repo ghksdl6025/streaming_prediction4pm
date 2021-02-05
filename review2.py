@@ -2,17 +2,17 @@ import pandas as pd
 import numpy as np
 pd.set_option('display.max_columns', 500)
 df =pd.read_csv('./data/bac_online.csv')
-small_caseid = np.random.choice(list(set(df['REQUEST_ID'])),1000)
+small_caseid = np.random.choice(list(set(df['REQUEST_ID'])),5000)
 df_small = df[df['REQUEST_ID'].isin(small_caseid)]
 df_small['START_DATE'] = pd.to_datetime(df_small['START_DATE'])
 df_small = df_small.sort_values(by='START_DATE')
-print(df_small.head)
-df_small.to_csv('./data/bac_online_sample.csv',index=False)
+print(df_small.shape)
+df_small.to_csv('./data/bac_online_small.csv',index=False)
 
-# dfn = pd.read_csv('./data/bac_offline.csv')
-# dfn_small = dfn[dfn['REQUEST_ID'].isin(small_caseid)]
-# print(dfn_small.head)
-# dfn_small.to_csv('./data/bac_offline_small.csv',index=False)
+dfn = pd.read_csv('./data/bac_offline.csv')
+dfn_small = dfn[dfn['REQUEST_ID'].isin(small_caseid)]
+print(dfn_small.shape)
+dfn_small.to_csv('./data/bac_offline_small.csv',index=False)
 
 # df = df[df['REQUEST_ID']==20176000338]
 # df['START_DATE'] = pd.to_datetime(df['START_DATE'])

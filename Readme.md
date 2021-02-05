@@ -7,4 +7,17 @@
 
 BAC activity occurance: 'Pending Request for acquittance of heirs'
 Case length with activity occurred
-{6, 7, 8, 9, 10, 12, 14, 16, 18}
+
+
+### Count case with "true" label appeared by event order
+| Label appeared | Case count |
+|:-:|:-:|
+| 4 | 3 |
+| 5 | 8 |
+| 6 | 1414 |
+| 7 | 12 |
+| 8 | 595 |
+| 10 | 70 |
+| 12 | 13 |
+| 14 | 2 |
+| 16 | 2 |

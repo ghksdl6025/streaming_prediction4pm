@@ -30,12 +30,14 @@ for _, group in groups:
 
     # concating.append(group)
     if True in outcomelist:
-        if len(outcomelist) not in trueminlen.keys():
-            trueminlen[len(outcomelist)] =1
+        if outcomelist.index(True) not in trueminlen.keys():
+            trueminlen[outcomelist.index(True)] =1
         else:
-            trueminlen[len(outcomelist)] +=1
+            trueminlen[outcomelist.index(True)] +=1
         
 print(trueminlen)
-sortedkey = sorted(trueminlen.keys()):""
+sortedkey = sorted(trueminlen.keys())
+for t in sortedkey:
+    print(t,':',trueminlen[t])
 # dfn = pd.concat(concating)
 # dfn.to_csv('./data/bac_online.csv',index=False)

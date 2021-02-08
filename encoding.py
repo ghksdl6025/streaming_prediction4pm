@@ -22,7 +22,7 @@ class prefix_bin:
         self.start_ts = ''
         self.prev_enc = None
         self.encoded = {} # The encoded case and event attrs
-        self.predicted =[] # Historical predicted values stored
+        self.predicted ={} # Historical predicted values stored
         self.true_label=None
         self.grace_updated = False
 
@@ -100,7 +100,7 @@ class prefix_bin:
         pred: value 
         '''
         # self.predicted[pred[0]] = pred[1]
-        self.predicted.append(pred[1])
+        self.predicted[pred[0]]=pred[1]
 
     def update_truelabel(self,label):
         self.true_label = label

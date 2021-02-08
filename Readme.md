@@ -21,3 +21,19 @@ Case length with activity occurred
 | 12 | 13 |
 | 14 | 2 |
 | 16 | 2 |
+
+## Continuous evaluation of HTC, HATC, EFDT  by prefix length and bin updates
+<p align="cener">
+    <img src="./img/HTC continuous acc.png">
+</p>
+
+<p align="cener">
+    <img src="./img/HATC continuous acc.png">
+</p>
+
+<p align="cener">
+    <img src="./img/EFDT continuous acc.png">
+</p>
+
+
+

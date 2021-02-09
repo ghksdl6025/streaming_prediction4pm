@@ -36,4 +36,9 @@ Case length with activity occurred
 </p>
 
 
+### Accuracy comparison between last updated streaming and offline prediction
+
+<p align="cener">
+    <img src="./img/last_acc_streaming.png">
+</p>
 

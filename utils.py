@@ -77,7 +77,7 @@ def succ_aggr_enc(event,catattrs,prefix_length,prev_enc=None):
     catattrs: list
         List of categorical attributes
 
-    prefi_length: int
+    prefix_length: int
         Current case prefix length
 
     prev_enc: class
@@ -91,7 +91,6 @@ def succ_aggr_enc(event,catattrs,prefix_length,prev_enc=None):
     if prev_enc == None:
         ohedict ={}
     else:
-        
         ohedict = {x:prev_enc.encoded[x] for x in prev_enc.encoded.keys()}
 
     # Event duration average
@@ -113,6 +112,53 @@ def succ_aggr_enc(event,catattrs,prefix_length,prev_enc=None):
             ohedict[oheitem] +=1
         
     return ohedict
+
+def succ_index_enc(event,catattrs,prefix_length,prev_enc=None):
+    '''
+    Succeding index-base encoding
+    Index-base encoding method along previously encoded case information in same method
+
+    Parameters
+    ----------
+    event: dictionary
+        Nelwy added event
+    
+    catattrs: list
+        List of categorical attributes
+
+    prefix_length: int
+        Current case prefix length
+
+    prev_enc: class
+        Previously streamed event case
+
+
+    Returns
+    ----------
+    One hot encoded dictionary in aggregation based 
+    '''
+    if prev_enc == None:
+        ohedict ={}
+    else:
+        ohedict = {x:prev_enc.encoded[x] for x in prev_enc.encoded.keys()}
+
+    # Event duration and cumlative duration
+    if 'duration_%s'%(prefix_length-1) not in list(ohedict.keys()):
+        ohedict['duration_%s'%(prefix_length)] = 0
+        ohedict['cumduration_%s'%(prefix_length)] = 0
+    else:
+        # Current event duration in seconds
+        duration = (event['ts'] - prev_enc.event['ts']).total_seconds()
+        ohedict['duration_%s'%(prefix_length)] =  duration
+        ohedict['cumduration_%s'%(prefix_length)] = ohedict['cumduration_%s'%(prefix_length-1)] + duration
+
+    # categorical attributes one hot encoding and counting
+    for cat in catattrs:
+        oheitem = cat+'_%s '%(prefix_length)+event[cat]
+        ohedict[oheitem] = 1
+        
+    return ohedict
+
 
 def invoke_cases_by_prefix(case_dict):
     '''

@@ -77,19 +77,32 @@ class prefix_bin:
         '''
         self.event = event
 
-    def update_encoded(self):
+    def update_encoded(self,catattrs=['activity','resource'],enctype='Aggregation'):
         '''
         Assign encoded case and event information to attrs property
 
         Parameters
         ----------
-        event: dictionary
+        event:      dictionary
             New event stream 
+        
+        catattrs:   list
+            Categorical attributes name list
+
+        enctype:    str
+            Encoding type to apply, Aggregation or Index-base
+
         '''
+        self.set_enctype(enctype)
         catattrs= ['activity','resource']
 
         if self.enctype =='Aggregation':
             self.encoded = utils.succ_aggr_enc(self.event, catattrs= catattrs,prefix_length=self.prefix_length,prev_enc = self.prev_enc)
+        
+        elif self.enctype =='Index-base':
+            self.encoded = utils.succ_index_enc(self.event, catattrs= catattrs,prefix_length=self.prefix_length,prev_enc = self.prev_enc)
+        else:
+            raise ValueError("Encoding type must be 'Aggregation' or 'Index-base'")
 
     def update_prediction(self, pred):
         '''

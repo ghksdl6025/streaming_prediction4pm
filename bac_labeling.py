@@ -1,12 +1,33 @@
 import pandas as pd
-from pm4py.objects.log.importer.xes import importer as xes_importer
-from pm4py.objects.conversion.log import converter as log_converter
-
+from tqdm import tqdm
 pd.set_option('display.max_columns', 500)
-log = xes_importer.apply('../../Downloads/BPIC15_1.xes')
-dataframe = log_converter.apply(log, variant=log_converter.Variants.TO_DATA_FRAME)
-dataframe.to_csv('./data/BPIC15_streaming2.csv',index=False)
-print(dataframe.head)
+df = pd.read_csv('./data/bac.csv')
+df['START_DATE'] = pd.to_datetime(df['START_DATE'])
+df = df.sort_values(by='START_DATE')
+actvivity_occurance = ['Authorization Requested', 'Pending Request for acquittance of heirs', 'Back-Office Adjustment Requested']
+
+groups = df.groupby('REQUEST_ID')
+counting = 0
+concating = []
+concating2 = []
+actlocationset = {}
+for _,group in tqdm(groups):
+    group = group.reset_index(drop=True)
+    actlist = list(group['ACTIVITY'])
+    outcome =False
+    if 'Authorization Requested' in actlist:
+        outcome=True
+        act_location = actlist.index('Authorization Requested')
+        if act_location not in list(actlocationset.keys()):
+            actlocationset[act_location] = 1
+        else:
+            actlocationset[act_location] += 1
+    else:
+        group.loc[len(group)-1,'outcome'] = outcome
+
+print(actlocationset)
+
+
 
 '''
 df = pd.read_csv('./data/BPIC15_1prep.csv')

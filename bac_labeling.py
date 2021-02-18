@@ -15,9 +15,9 @@ for _,group in tqdm(groups):
     group = group.reset_index(drop=True)
     actlist = list(group['ACTIVITY'])
     outcome =False
-    if 'Authorization Requested' in actlist:
+    if 'Back-Office Adjustment Requested' in actlist:
         outcome=True
-        act_location = actlist.index('Authorization Requested')
+        act_location = actlist.index('Back-Office Adjustment Requested')
         if act_location not in list(actlocationset.keys()):
             actlocationset[act_location] = 1
         else:

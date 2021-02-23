@@ -7,8 +7,17 @@
 
 
 ## Dataset
-1) _Bank Account Closure_ [1] 
-2) _Artificial log_ [2]
+1) _Bank Account Closure_ [1]   
+   __Label__: Activity occurance  
+   (1) Authorization Requested  
+   (2) Pending Request for acquittance of heirs  
+   (3) Back-Office Adjustment Requested  
+
+
+2) _Artificial log_ [2]  
+   __Label__: Activity occurance  
+   (1) Approve_application
+
 
 ## 1. BAC activity occurance [1]
 
@@ -61,6 +70,7 @@ __Back-Office Adjustment Requested__
 | 11 | 1 |
 
 ### 1-2. BAC activity occurance results
+_"Authorization Requested"_
 <p align="center">
     <img src="./img/bac_auth/continuous_evaluation_acc_plbin.png">
 </p>
@@ -69,6 +79,23 @@ __Back-Office Adjustment Requested__
     <img src="./img/bac_auth/continuous_evaluation_acc_rt50bin.png">
 </p>
 
+_"Pending Request for acquittance of heirs"_
+<p align="center">
+    <img src="./img/bac_pending/continuous_evaluation_acc_plbin.png">
+</p>
+
+<p align="center">
+    <img src="./img/bac_pending/continuous_evaluation_acc_rt50bin.png">
+</p>
+
+_"Back-Office Adjustment Requested"_
+<p align="center">
+    <img src="./img/bac_back/continuous_evaluation_acc_plbin.png">
+</p>
+
+<p align="center">
+    <img src="./img/bac_back/continuous_evaluation_acc_rt50bin.png">
+</p>
 
 ## 2. Artificial log [2]
 
@@ -81,6 +108,18 @@ __Back-Office Adjustment Requested__
 <p align="center">
     <img src="./img/Loan_baseline_IRO.png">
 </p>
+
+### 2-2. Artificial log activity occurance results
+
+_"Approve_application"_ 
+<p align="center">
+    <img src="./img/artificial_concept/continuous_evaluation_acc_plbin.png">
+</p>
+
+<p align="center">
+    <img src="./img/artificial_concept/continuous_evaluation_acc_rt50bin.png">
+</p>
+
 
 ---
 [1]Galanti, Riccardo, et al. "Explainable predictive process monitoring." 2020 2nd International Conference on Process Mining (ICPM). IEEE, 2020.

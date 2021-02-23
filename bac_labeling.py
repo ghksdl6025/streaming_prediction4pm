@@ -9,7 +9,6 @@ actvivity_occurance = ['Authorization Requested', 'Pending Request for acquittan
 groups = df.groupby('REQUEST_ID')
 counting = 0
 concating = []
-concating2 = []
 actlocationset = {}
 for _,group in tqdm(groups):
     group = group.reset_index(drop=True)
@@ -18,14 +17,12 @@ for _,group in tqdm(groups):
     if 'Back-Office Adjustment Requested' in actlist:
         outcome=True
         act_location = actlist.index('Back-Office Adjustment Requested')
-        if act_location not in list(actlocationset.keys()):
-            actlocationset[act_location] = 1
-        else:
-            actlocationset[act_location] += 1
+        group.loc[act_location:,'outcome'] =outcome
     else:
         group.loc[len(group)-1,'outcome'] = outcome
-
-print(actlocationset)
+    concating.append(group)
+dft = pd.concat(concating)
+dft.to_csv('./data/bac_online_back.csv',index=False)
 
 
 

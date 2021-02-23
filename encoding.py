@@ -94,7 +94,7 @@ class prefix_bin:
 
         '''
         self.set_enctype(enctype)
-        catattrs= ['activity','resource']
+        # catattrs= ['activity','resource']
 
         if self.enctype =='Aggregation':
             self.encoded = utils.succ_aggr_enc(self.event, catattrs= catattrs,prefix_length=self.prefix_length,prev_enc = self.prev_enc)

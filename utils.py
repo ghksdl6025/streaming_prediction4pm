@@ -218,6 +218,7 @@ Functions for continuous evaluation
 4) rt_event_continuous_evaluation (relative time-event)
 
 '''
+
 def averaged_prediction(bin_result_list):
     '''
     Get single prediction value by bin result list
@@ -231,7 +232,12 @@ def averaged_prediction(bin_result_list):
     ----------
     The most frequent singe value in arg max value from bin_result_list
     '''
-    return sorted(Counter(bin_result_list).items(),key = (lambda x:x[1]),reverse=True)[0][0]
+    try:
+        answer =sorted(Counter(bin_result_list).items(),key = (lambda x:x[1]),reverse=True)[0][0] 
+    except:
+        answer = None
+    return answer
+
 
 def get_ts_bin_list(current_ts, next_ts, bin_n):
     '''
@@ -334,14 +340,14 @@ def pl_case_continuous_evaluation(resultdict):
     y_true = {}
     for case in tqdm(resultdict.keys()):
         if len(resultdict[case]) > 2:
-            prediction_by_bin =[]
             for event in range(1,len(resultdict[case])-1):
                 bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
-                prediction_by_bin.append(averaged_prediction(bin_result_list))
-                y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
-                bin_pred[str(case)+'_'+str(event+1)] = averaged_prediction(bin_result_list)
-    
+                bin_predicted_value = averaged_prediction(bin_result_list)
+                if bin_predicted_value != None:
+                    y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
+                    bin_pred[str(case)+'_'+str(event+1)] = bin_predicted_value
     return y_true, bin_pred
+
 
 def rt_event_continuous_evaluation(resultdict, bin_n):
     bin_pred = {}
@@ -366,14 +372,20 @@ def rt_case_continuous_evaluation(resultdict, bin_n):
     y_true = {}
     for case in tqdm(resultdict.keys()):
         if len(resultdict[case]) > 2:
-            prediction_by_bin =[]
+            prediction_counter = 0
+            prediction_by_bin ={}
+            start_ts = resultdict[case][1].event['ts']
+            end_ts = resultdict[case][-1].event['ts']
+            bin_list = get_ts_bin_list(start_ts, end_ts, bin_n)
             for event in range(1,len(resultdict[case])-1):
-                bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
-                prediction_by_bin.append(averaged_prediction(bin_result_list))
-                y_true[str(case)+'_'+str(event+1)] = resultdict[case][event].true_label
-                bin_pred[str(case)+'_'+str(event+1)] = averaged_prediction(bin_result_list)
-    
-    
+                for predict in resultdict[case][event].predicted.keys():
+                    prediction_by_bin[prediction_counter] = resultdict[case][event].predicted[predict]
+                    prediction_counter +=1
+            t = ts_averaged_prediction_by_bin(bin_list,prediction_by_bin)
+            for each_bin in [x for x in t.keys()]:                
+                y_true[str(case)+'_'+str(each_bin[2]+1)]=resultdict[case][event].true_label
+                bin_pred[str(case)+'_'+str(each_bin[2]+1)]= t[each_bin]
+            
     return y_true, bin_pred
 
 if __name__== "__main__":

@@ -5,7 +5,12 @@
     <img src="./img/Framework.jpg">
 </p>
 
-### BAC activity occurance: F('Authorization Requested')[1]
+
+## Dataset
+1) _Bank Account Closure_ [1] 
+2) _Artificial log_ [2]
+
+## 1. BAC activity occurance [1]
 
 <p align="center">
 
@@ -54,13 +59,30 @@ __Back-Office Adjustment Requested__
 | 9 | 1 |
 | 10 | 8 |
 | 11 | 1 |
-## Continuous evaluation of HTC, HATC, EFDT  by prefix length and bin updates
 
-### Accuracy comparison between last updated streaming and offline prediction
+### 1-2. BAC activity occurance results
+<p align="center">
+    <img src="./img/bac_auth/continuous_evaluation_acc_plbin.png">
+</p>
 
-<p align="cener">
-    <img src="./img/last_acc_streaming.png">
+<p align="center">
+    <img src="./img/bac_auth/continuous_evaluation_acc_rt50bin.png">
 </p>
 
 
+## 2. Artificial log [2]
+
+### Original trace (baseline)
+<p align="center">
+    <img src="./img/Loan_baseline.png">
+</p>
+
+### Process drift trace
+<p align="center">
+    <img src="./img/Loan_baseline_IRO.png">
+</p>
+
+---
 [1]Galanti, Riccardo, et al. "Explainable predictive process monitoring." 2020 2nd International Conference on Process Mining (ICPM). IEEE, 2020.
+
+[2]Maaradji, Abderrahmane, et al. "Fast and accurate business process drift detection." International Conference on Business Process Management. Springer, Cham, 2016.

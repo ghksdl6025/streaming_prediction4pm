@@ -2,31 +2,35 @@ import pandas as pd
 import numpy as np
 import math
 pd.set_option('display.max_columns', 500)
-df =pd.read_csv('./data/bac_online.csv')
+df =pd.read_csv('./data/bac_online_back.csv')
 
 groups = df.groupby('REQUEST_ID')
-print(len(groups))
 print(len(set(df['REQUEST_ID'])))
-
-dft =pd.read_csv('./data/bac_offline.csv')
+print(df.shape)
+# dft =pd.read_csv('./data/bac_offline.csv')
 small_caseid = np.random.choice(list(set(df['REQUEST_ID'])),10000,replace=False)
 df_small = df[df['REQUEST_ID'].isin(small_caseid)]
-dft_small = dft[dft['REQUEST_ID'].isin(small_caseid)]
+groups = df_small.groupby('REQUEST_ID')
 
-df_small['START_DATE'] = pd.to_datetime(df_small['START_DATE'])
-df_small = df_small.sort_values(by='START_DATE')
-
-dft_small['START_DATE'] = pd.to_datetime(dft_small['START_DATE'])
-dft_small = dft_small.sort_values(by='START_DATE')
-
-# print(len(set(df['REQUEST_ID'])))
+print(len(set(df_small['REQUEST_ID'])))
 print(df_small.shape)
+df_small.to_csv('./data/bac_online_back_small.csv',index=False)
+# dft_small = dft[dft['REQUEST_ID'].isin(small_caseid)]
 
-# print(len(set(dft['REQUEST_ID'])))
-print(dft_small.shape)
+# df_small['START_DATE'] = pd.to_datetime(df_small['START_DATE'])
+# df_small = df_small.sort_values(by='START_DATE')
 
-df_small.to_csv('./data/bac_online_small.csv',index=False)
-dft_small.to_csv('./data/bac_offline_small.csv',index=False)
+# dft_small['START_DATE'] = pd.to_datetime(dft_small['START_DATE'])
+# dft_small = dft_small.sort_values(by='START_DATE')
+
+# # print(len(set(df['REQUEST_ID'])))
+# print(df_small.shape)
+
+# # print(len(set(dft['REQUEST_ID'])))
+# print(dft_small.shape)
+
+# df_small.to_csv('./data/bac_online_small.csv',index=False)
+# dft_small.to_csv('./data/bac_offline_small.csv',index=False)
 
 
 def filter_by_prefix(df,prefix):

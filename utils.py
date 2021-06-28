@@ -3,9 +3,6 @@ Utility functions used in training and pre-processing stage.
 '''
 import graphviz 
 from collections import Counter
-from sklearn.metrics import classification_report,accuracy_score
-import numpy as np
-from tqdm import tqdm
 import datetime
 
 def save_graph_as_png(dot_string, output_file):
@@ -210,6 +207,7 @@ def readjustment_training(dataset, feature_matrix):
             new_dataset[feature] = 0
     return new_dataset
 
+
 '''
 Functions for continuous evaluation
 1) averaged_prediction
@@ -293,28 +291,6 @@ def get_pl_bin_list(pl_start, pl_end):
 
     return binlist
 
-def pl_averaged_prediction_by_bin(bin_list, event_prediction):
-    bin_result_dict = {}
-    
-    for pos, t in enumerate(bin_list):
-        t = (t[0],t[1],pos+1)
-        bin_result_dict[t] = []
-    prev_bin_t = list(bin_result_dict.keys())[0]
-    
-    for bin_t in bin_result_dict.keys():        
-        for result in event_prediction.values():
-            if result[1] >=  bin_t[0] and result[1] <  bin_t[1]:
-                bin_result_dict[bin_t].append(result[0])
-            elif bin_t[0]==bin_t[1] and result[1] == bin_t[0]:
-                bin_result_dict[bin_t].append(result[0])                       
-        if len(bin_result_dict[bin_t]) ==0:
-            bin_result_dict[bin_t].append(bin_result_dict[prev_bin_t])
-        prev_bin_t = bin_t
-        bin_result_dict[bin_t] = averaged_prediction(bin_result_dict[bin_t])
-        
-    return bin_result_dict
-
-
 
 def ts_averaged_prediction_by_bin(bin_list, event_prediction):
     bin_result_dict = {}
@@ -338,7 +314,7 @@ def ts_averaged_prediction_by_bin(bin_list, event_prediction):
 def pl_case_continuous_evaluation(resultdict):
     bin_pred = {}
     y_true = {}
-    for case in tqdm(resultdict.keys()):
+    for case in resultdict.keys():
         if len(resultdict[case]) > 2:
             for event in range(1,len(resultdict[case])-1):
                 bin_result_list = [x[0] for x in resultdict[case][event].predicted.values()]
@@ -352,7 +328,7 @@ def pl_case_continuous_evaluation(resultdict):
 def rt_event_continuous_evaluation(resultdict, bin_n):
     bin_pred = {}
     y_true = {}
-    for case in tqdm(resultdict.keys()):
+    for case in resultdict.keys():
         if len(resultdict[case]) > 2:
             for event in range(1,len(resultdict[case])-1):
                 current_event_ts = resultdict[case][event].event['ts']
@@ -370,7 +346,8 @@ def rt_event_continuous_evaluation(resultdict, bin_n):
 def rt_case_continuous_evaluation(resultdict, bin_n):
     bin_pred = {}
     y_true = {}
-    for case in tqdm(resultdict.keys()):
+    t_bunch ={}
+    for case in resultdict.keys():
         if len(resultdict[case]) > 2:
             prediction_counter = 0
             prediction_by_bin ={}
@@ -385,21 +362,36 @@ def rt_case_continuous_evaluation(resultdict, bin_n):
             for each_bin in [x for x in t.keys()]:                
                 y_true[str(case)+'_'+str(each_bin[2]+1)]=resultdict[case][event].true_label
                 bin_pred[str(case)+'_'+str(each_bin[2]+1)]= t[each_bin]
-            
     return y_true, bin_pred
 
-if __name__== "__main__":
-    test_event1 = {'activity': 'O_Accepted', 'resource': 'User_115', 'ts': '2016-01-29 21:33:14'}
-    test_event2 = {'activity': 'O_Create Offer', 'resource': 'User_34', 'ts': '2016-01-29 21:41:06'}
-    test_event3 = {'activity': 'O_Accepted', 'resource': 'User_115', 'ts': '2016-01-29 21:04:32'}
+class window_evaluation:
+    def __init__(self, window_size):
+        self.acc_window_savings =[]
+        self.acc_window=[]
+        self.window_size = window_size
+    
+    def calculate_acc(self):
+        counting_true = 0
+        for yt, yp in self.acc_window:
+            if yt ==yp:
+                counting_true +=1
+        return counting_true / len(self.acc_window)
 
-    catattrs = ['activity','resource']
-    samp1 = succ_aggr_enc(test_event1,catattrs=catattrs,prefix_length=1)
-    samp2 = succ_aggr_enc(test_event2,catattrs=catattrs,prefix_length=2,prev_enc= samp1)
-    samp3 = succ_aggr_enc(test_event3,catattrs=catattrs,prefix_length=3,prev_enc= samp2)
-    # print(samp1)
-    # print(samp2)
-    print(samp3)
+    def update(self,yt,yp):
+        if len(self.acc_window) >= self.window_size:
+            self.acc_window.pop(0)
+        self.acc_window.append((yt,yp))
+        self.acc_window_savings.append(self.calculate_acc())
+    
+    def invoke_acc_savings(self):
+        return self.acc_window_savings
 
+    def get(self):
+        if len(self.acc_window_savings) >=1:
+            return self.acc_window_savings[-1]
+        else:
+            return 0
 
-
+    def label_dist(self):
+        label_list = [x[0] for x in self.acc_window]
+        return Counter(label_list)

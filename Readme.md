@@ -27,24 +27,44 @@ First of all, the labels received are only used to train the models in the frame
 Note that different versions of the same model pomk are generated along the considered timeline. In particular, a new version of <img src="https://render.githubusercontent.com/render/math?math=pom_k"> is generated when a new label <img src="https://render.githubusercontent.com/render/math?math=y_j"> for a case <img src="https://render.githubusercontent.com/render/math?math=\sigma_j">. For instance, in the example 3 different versions of <img src="https://render.githubusercontent.com/render/math?math=pom_1"> are generated. Second, new predictions for prefixes of length <img src="https://render.githubusercontent.com/render/math?math=k"> are generated each time a new version of <img src="https://render.githubusercontent.com/render/math?math=pom_k"> is available. In the example, receiving the label <img src="https://render.githubusercontent.com/render/math?math=y_{c1}"> of case c1 at t8 triggers (i) the creation
 of a new version of <img src="https://render.githubusercontent.com/render/math?math=pom_1"> (<img src="https://render.githubusercontent.com/render/math?math=pom''_1">) and (ii) the generation of a new prediction <img src="https://render.githubusercontent.com/render/math?math=\hat{y}_{1,c3}"> for case c3, which is still running at t8. Finally, note that a prediction can only be evaluated when the corresponding label becomes available. In the example, the predictions generated for all the prefixes of case 3 cannot be evaluated because the label of case 3 has yet to be received at t8.
 
+## Performance evaluation
+### 1) Evaluating performance using a local timeline
+#### a) Continuous evaluation by prefix length 
+_“How likely is theframework to output a correct prediction for a running trace at prefix length k?”_
 
+The design of a suitable performance measure starts from aggregating the predictions available for a case at a given prefix length, in order to obtain one reference value for each trace for which a label has been received at each prefix length.
+
+#### b) Continuous evaluation by case duration
+_"How likely is the framework to output a correct prediction when x% of its duration has elapsed?"_
+
+This type of evaluation is similar to the previous one, however, in this case the progress of a case is identified by the time elapsed since the beginning of it.
+
+### 2) Real-time model performance
+_“How likely are the most recentprediction(s) obtained from a model to be eventually correct?”_
+
+ In the real-time method we first define w as the size of a test window containing the traces associated with the latest W labels <img src="https://render.githubusercontent.com/render/math?math=y_w"> that have been received. Then consider the  average of the performance across all the predictions available, at any prefix length, for each trace in this window.
+
+## Experiment results
+
+Experiment results and additional results are presented in following link:  
+[Experiment Results](./Experiment_results.md)
+
+---
 ```
 📦streaming_event_prediction4pm
  ┣ 📂data
  ┃ ┣ 📜bpic15.csv
  ┃ ┣ 📜bpic17.csv
  ┃ ┣ 📜iro5k.csv
- ┃ ┗ 📜road_traffic_fine_process.csv
  ┣ 📂img
  ┃ ┗ 📂readme_img
  ┃ ┃ ┣ 📜Performance_indiciator_figure.png
  ┃ ┃ ┣ 📜general_framework_a.png
  ┃ ┃ ┗ 📜general_framework_b.png
- ┣ 📂result
- ┃ ┣ 📂bpic15
- ┃ ┣ 📂bpic17
- ┃ ┣ 📂iro5k
- ┃ ┗ 📂road_traffic_fine_process
+ ┣ ┗ 📂additional_results
+ ┣ ┗ 📂bpic15
+ ┣ ┗ 📂bpic17
+ ┣ ┗ 📂iro5k
  ┣ 📜.gitignore
  ┣ 📜Readme.md
  ┣ 📜dataset_parameters.json
